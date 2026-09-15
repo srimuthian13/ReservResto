@@ -1,0 +1,170 @@
+        :root {
+            --primary-blue: #0d2c54;
+            --accent-copper: #b26a4c;
+            --bg-light: #f4f7fa;
+            --text-dark: #1e293b;
+            --border-color: #e2e8f0;
+            --danger: #e74c3c;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            margin: 0;
+            padding: 0;
+            color: var(--text-dark);
+        }
+
+        /* Wrapper Utama agar margin kanan-kiri rapi */
+        .wrapper {
+            max-width: 1200px;
+            /* Batas lebar maksimal agar tidak terlalu lebar di layar besar */
+            margin: 40px auto;
+            /* Centering horizontal */
+            padding: 0 40px;
+            /* Padding internal agar tidak mepet layar saat browser dikecilkan */
+        }
+
+        header {
+            background: var(--primary-blue);
+            color: #fff;
+            padding: 20px 40px;
+            margin-bottom: 25px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            margin-left: 20px;
+        }
+
+
+        /* Card Tabel */
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            /* Menjaga border-radius tetap rapi di sudut tabel */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+        }
+
+        th {
+            background: #f8fafc;
+            color: #64748b;
+            font-weight: 600;
+            padding: 16px 20px;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+            border-bottom: 2px solid var(--border-color);
+            text-align: left;
+        }
+
+        td {
+            padding: 16px 20px;
+            font-size: 14px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background-color: #f9fafb;
+        }
+
+        /* Image styling */
+        .room-img {
+            width: 70px;
+            height: 45px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .placeholder-img {
+            width: 70px;
+            height: 45px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #f1f5f9;
+            color: #94a3b8;
+            border-radius: 6px;
+            border: 1px dashed #e2e8f0;
+            font-size: 11px;
+        }
+
+        /* Button styling */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 13px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .btn-add {
+            background: #fff;
+            color: var(--primary-blue);
+
+            border: 1px solid var(--primary-blue);
+            margin-bottom: 20px;
+        }
+
+        .btn-add:hover {
+            background: #1a3a61;
+            transform: translateY(-1px);
+            color:#fff
+        }
+
+        .btn-edit {
+            color: var(--primary-blue);
+            background: #eef2f7;
+            margin-right: 8px;
+        }
+
+        .btn-edit:hover {
+            background: #e0e7f1;
+        }
+
+        .btn-delete {
+            color: var(--danger);
+            background: #fff5f5;
+        }
+
+        .btn-delete:hover {
+            background: var(--danger);
+            color: #fff;
+        }
+
+        .price {
+            font-weight: 600;
+            color: var(--accent-copper);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .wrapper {
+                padding: 0 20px;
+                margin: 20px auto;
+            }
+        }

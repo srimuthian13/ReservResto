@@ -1,0 +1,194 @@
+<aside th:fragment="navbar" class="admin-sidebar" aria-label="Admin sidebar">
+    <style>
+        /* CSS Variabel untuk konsistensi tema */
+        :root {
+            --admin-bg: #0d2c54; /* Midnight Blue */
+            --admin-accent: #b26a4c; /* Copper Gold */
+            --admin-text: #ffffff;
+            --admin-hover: rgba(255, 255, 255, 0.08);
+            --sidebar-width: 200px; /* Ukuran diperkecil dari 220px */
+        }
+
+        .admin-sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: var(--sidebar-width);
+            background: var(--admin-bg);
+            color: var(--admin-text);
+            padding: 24px 15px;
+            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .admin-sidebar .brand {
+            font-size: 16px;
+            font-weight: 800;
+            margin-bottom: 25px;
+            color: var(--admin-accent); /* Warna emas/tembaga */
+            text-decoration: none;
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 15px;
+        }
+
+        .admin-sidebar .balance-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 3px solid var(--admin-accent);
+        }
+
+        .admin-sidebar .balance-card span {
+            display: block;
+            font-size: 10px;
+            color: #cbd5e1;
+            text-transform: uppercase;
+        }
+
+        .admin-sidebar .balance-card strong {
+            font-size: 14px;
+            color: #fff;
+        }
+
+        .admin-sidebar nav {
+            flex-grow: 1;
+        }
+
+        .admin-sidebar a {
+            color: #d1d5db;
+            display: block;
+            padding: 10px 12px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 13.5px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-bottom: 4px;
+        }
+
+        .admin-sidebar a:hover {
+            background: var(--admin-hover);
+            color: var(--admin-accent);
+            transform: translateX(5px);
+        }
+
+        /* Menu Aktif (Opsional: tambahkan class 'active' di controller jika perlu) */
+        .admin-sidebar a.active {
+            background: var(--admin-accent);
+            color: white;
+        }
+
+        .admin-sidebar .section {
+            margin-top: auto;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-sidebar .btn-logout {
+            color: #ff7675;
+            font-weight: 600;
+        }
+
+        .admin-sidebar .btn-logout:hover {
+            background: rgba(255, 118, 117, 0.1);
+            color: #ff7675;
+        }
+
+        /* Penyesuaian Body */
+        body.admin-with-sidebar {
+            margin-left: var(--sidebar-width);
+            background-color: #f8fafc;
+        }
+
+        @media (max-width:800px) {
+            .admin-sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                padding: 15px;
+            }
+
+            body.admin-with-sidebar {
+                margin-left: 0;
+            }
+        }
+    </style>
+
+    <a href="/admin/dashboard" class="brand">ReservResto <span style="font-weight:300; color:#fff">Admin</span></a>
+    
+    <div class="balance-card">
+        <span>Total Saldo Resto</span>
+        <strong th:text="${adminBalance != null ? 'Rp ' + adminBalance : 'Rp 0'}">Rp 0</strong>
+    </div>
+
+    <nav>
+        <a href="/admin/reservasi">Data Reservasi</a>
+        <a href="/admin/users">Data Pelanggan</a>
+        <a href="/admin/tables">Management Meja</a>
+        <a href="/admin/roomtypes">Area Restoran</a>
+        <a href="/admin/menus">Data Menu</a>
+    </nav>
+
+    <div class="section">
+        <a href="/" class="btn-logout" onclick="return confirm('Keluar dari panel admin?')">Logout</a>
+    </div>
+
+    <script>
+        try { document.body.classList.add('admin-with-sidebar'); } catch (e) { }
+    </script>
+</aside>
+
+<div th:fragment="back-to-top">
+        <button onclick="scrollToTop()" id="backToTop" title="Kembali ke atas">
+            <i class="bi bi-arrow-up-short"><p>^</p></i>
+        </button>
+
+        <style>
+            #backToTop {
+                display: none;
+                position: fixed;
+                bottom: 30px;
+                right: 30px;
+                z-index: 99;
+                background-color: #0d2c54;
+                color: white;
+                border: none;
+                width: 45px;
+                height: 45px;
+                border-radius: 50%;
+                cursor: pointer;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                transition: 0.3s;
+                align-items: center;
+                justify-content: center;
+            }
+            #backToTop:hover { transform: translateY(-5px); background-color: #b26a4c; }
+
+            p{
+                text-align: center;
+                font-size: 30px;
+            }
+        </style>
+
+        <script>
+            const mybutton = document.getElementById("backToTop");
+            window.onscroll = function() {
+                if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                    mybutton.style.display = "flex";
+                } else {
+                    mybutton.style.display = "none";
+                }
+            };
+            function scrollToTop() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        </script>
+    </div>

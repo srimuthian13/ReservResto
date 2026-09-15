@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil & Reservasi Saya | ReservResto</title>
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <style>
+        :root {
+            --primary: #0d2c54;
+            --secondary: #b26a4c;
+            --bg-light: #f8fafc;
+            --white: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+        }
+
+        .profile-container {
+            display: flex;
+            max-width: 1150px;
+            margin: 40px auto 80px;
+            gap: 30px;
+            padding: 0 20px;
+        }
+
+        /* SIDEBAR */
+        .profile-sidebar {
+            width: 320px;
+            background: var(--white);
+            padding: 35px 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+            text-align: center;
+            height: fit-content;
+            border: 1px solid #edf2f7;
+        }
+
+        .avatar-circle {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--primary) 0%, #1e4d8c 100%);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 42px;
+            color: var(--white);
+            box-shadow: 0 8px 20px rgba(13, 44, 84, 0.18);
+        }
+
+        .profile-info h4 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 0 0 5px 0;
+        }
+
+        .profile-info p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin: 0 0 15px 0;
+            word-break: break-all;
+        }
+
+        .user-detail-pills {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            background: #f1f5f9;
+            padding: 12px 15px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: left;
+        }
+
+        .user-detail-pills div {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .user-detail-pills i {
+            color: var(--secondary);
+        }
+
+        /* ACTIONS & TABS */
+        .profile-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn-action {
+            width: 100%;
+            padding: 12px 18px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-nav {
+            background: #f8fafc;
+            color: var(--text-muted);
+            border: 1.5px solid #e2e8f0;
+        }
+
+        .btn-nav:hover,
+        .btn-nav.active {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+            box-shadow: 0 4px 15px rgba(13, 44, 84, 0.15);
+        }
+
+        .btn-logout {
+            background: #fff5f5;
+            color: #e53e3e;
+            border: 1.5px solid #feb2b2;
+            margin-top: 10px;
+        }
+
+        .btn-logout:hover {
+            background: #e53e3e;
+            color: var(--white);
+            border-color: #e53e3e;
+        }
+
+        /* MAIN CONTENT AREA */
+        .profile-content {
+            flex: 1;
+            background: var(--white);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+            min-height: 550px;
+            border: 1px solid #edf2f7;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 45px;
+            height: 3.5px;
+            background: var(--secondary);
+            border-radius: 2px;
+        }
+
+        .hidden { display: none !important; }
+
+        /* TABLE STYLING */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+        }
+
+        th {
+            background: transparent;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            padding: 10px 15px;
+            text-align: left;
+        }
+
+        td {
+            padding: 16px 15px;
+            background: #f8fafc;
+            border-top: 1px solid #edf2f7;
+            border-bottom: 1px solid #edf2f7;
+            font-size: 14px;
+        }
+
+        td:first-child {
+            border-left: 1px solid #edf2f7;
+            border-radius: 12px 0 0 12px;
+        }
+
+        td:last-child {
+            border-right: 1px solid #edf2f7;
+            border-radius: 0 12px 12px 0;
+        }
+
+        tr:hover td {
+            background: #f1f5f9;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+
+        .status-CONFIRMED, .status-CHECKED_IN, .status-COMPLETED { background: #dcfce7; color: #166534; }
+        .status-WAITING_PAYMENT, .status-WAITING_VERIFICATION { background: #fef9c3; color: #854d0e; }
+        .status-CANCELLED, .status-NO_SHOW { background: #fee2e2; color: #991b1b; }
+
+        .btn-view-detail {
+            padding: 6px 14px;
+            background: var(--primary);
+            color: var(--white);
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .btn-view-detail:hover {
+            background: var(--secondary);
+        }
+
+        /* FORM STYLING */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--text-main);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-control-input {
+            padding: 12px 16px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            background: #f8fafc;
+            transition: all 0.3s ease;
+        }
+
+        .form-control-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: var(--white);
+            box-shadow: 0 0 0 3px rgba(13, 44, 84, 0.1);
+        }
+
+        .form-control-input[readonly] {
+            background: #e2e8f0;
+            cursor: not-allowed;
+            color: var(--text-muted);
+        }
+
+        .btn-save-profile {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 14px 30px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-save-profile:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        /* ALERTS */
+        .alert {
+            padding: 14px 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            font-size: 13.5px;
+            font-weight: 500;
+        }
+
+        .alert-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .alert-error { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+
+        @media (max-width: 850px) {
+            .profile-container { flex-direction: column; }
+            .profile-sidebar { width: 100%; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div th:replace="~{fragments/navbar :: navbar}"></div>
+    </header>
+
+    <div class="profile-container">
+        <!-- SIDEBAR PROFIL -->
+        <div class="profile-sidebar">
+            <div class="avatar-circle">
+                <i class="bi bi-person-fill"></i>
+            </div>
+
+            <div class="profile-info">
+                <h4 th:text="${user.name}">Nama Pengguna</h4>
+                <p th:text="${user.email}">email@contoh.com</p>
+
+                <div class="user-detail-pills">
+                    <div><i class="bi bi-telephone-fill"></i> <span th:text="${user.phoneNumber} ?: '-'">-</span></div>
+                    <div><i class="bi bi-shield-check"></i> <span>Akun Terverifikasi</span></div>
+                </div>
+            </div>
+
+            <div class="profile-actions">
+                <button class="btn-action btn-nav active" onclick="showSection('reservasi', this)">
+                    <i class="bi bi-journal-text"></i> Reservasi Saya
+                </button>
+                <button class="btn-action btn-nav" onclick="showSection('pengaturan', this)">
+                    <i class="bi bi-person-gear"></i> Detail Profil
+                </button>
+                <a th:href="@{/logout}" class="btn-action btn-logout" onclick="return confirm('Keluar dari akun?')">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </a>
+            </div>
+        </div>
+
+        <!-- CONTENT AREA -->
+        <div class="profile-content">
+            <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+            <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+            <!-- SECTION 1: HISTORY RESERVASI -->
+            <section id="reservasi-section">
+                <h3 class="section-title">Riwayat Reservasi Saya</h3>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID Reservasi</th>
+                                <th>Meja</th>
+                                <th>Waktu Kedatangan</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:if="${#lists.isEmpty(reservasiList)}">
+                                <td colspan="5" style="text-align: center; color: #94a3b8; padding: 50px 20px;">
+                                    <i class="bi bi-calendar-x" style="font-size: 2.5rem; display: block; margin-bottom: 10px;"></i>
+                                    Belum ada data reservasi. Buat reservasi meja sekarang!
+                                </td>
+                            </tr>
+                            <tr th:each="r : ${reservasiList}">
+                                <td style="font-weight: 700; color: var(--primary);">#<span th:text="${r.idReservasi}"></span></td>
+                                <td th:text="${r.table != null ? 'Meja ' + r.table.tableNo : '-'}">Meja</td>
+                                <td th:text="${#temporals.format(r.reservasiTime, 'dd MMM yyyy, HH:mm')}">Waktu</td>
+                                <td>
+                                    <span class="status-badge" 
+                                          th:classappend="'status-' + ${r.status}"
+                                          th:text="${r.status}">
+                                    </span>
+                                </td>
+                                <td>
+                                    <a th:href="@{/user/{userId}/reservasi/{id}(userId=${user.id},id=${r.idReservasi})}" class="btn-view-detail">
+                                        <i class="bi bi-eye-fill"></i> Detail
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- SECTION 2: EDIT PROFIL -->
+            <section id="pengaturan-section" class="hidden">
+                <h3 class="section-title">Pengaturan Profil</h3>
+                
+                <form th:action="@{/user/{userId}/update(userId=${user.id})}" method="post">
+                    <div class="info-grid">
+                        <div class="form-group">
+                            <label>Nama Lengkap</label>
+                            <input type="text" name="name" th:value="${user.name}" class="form-control-input" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Alamat Email</label>
+                            <input type="email" name="email" th:value="${user.email}" class="form-control-input" readonly />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Nomor Telepon</label>
+                            <input type="text" name="phoneNumber" th:value="${user.phoneNumber}" class="form-control-input" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Password Baru (Opsional)</label>
+                            <input type="password" name="password" placeholder="Biarkan kosong jika tidak diubah" class="form-control-input" />
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 30px;">
+                        <button type="submit" class="btn-save-profile">
+                            <i class="bi bi-check-circle-fill" style="margin-right: 6px;"></i> Simpan Perubahan
+                        </button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+
+    <footer>
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    </footer>
+
+    <script>
+        function showSection(sectionName, element) {
+            document.getElementById('reservasi-section').classList.add('hidden');
+            document.getElementById('pengaturan-section').classList.add('hidden');
+
+            document.getElementById(sectionName + '-section').classList.remove('hidden');
+
+            const btns = document.querySelectorAll('.btn-nav');
+            btns.forEach(btn => btn.classList.remove('active'));
+
+            element.classList.add('active');
+        }
+
+        const nameInput = document.querySelector('input[name="name"]');
+        if (nameInput) {
+            nameInput.addEventListener('blur', function(e) {
+                let val = e.target.value;
+                if (val.length > 0) {
+                    e.target.value = val.charAt(0).toUpperCase() + val.slice(1);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

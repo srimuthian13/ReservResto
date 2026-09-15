@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Manajemen Meja | Admin</title>
+    <link rel="stylesheet" th:href="@{/css/admin-table-form.css}">
+</head>
+
+<body>
+
+    <div th:replace="~{fragments/admin-navbar :: navbar}"></div>
+
+    <div class="wrapper">
+        <div class="card">
+            <div class="card-header">
+                <h4 th:text="${table.id == null ? 'Tambah Meja Baru' : 'Edit Data Meja'}"></h4>
+            </div>
+
+            <div class="card-body">
+                <form th:action="@{/admin/tables/save}" th:object="${table}" method="post">
+                    <input type="hidden" th:field="*{id}">
+
+                    <div class="form-group">
+                    <label>Area Restoran</label>
+                    <select name="roomType.id" class="form-control" required>
+                        <option value="">-- Pilih Area --</option>
+                        <option th:each="rt : ${roomTypes}"
+                                th:value="${rt.id}"
+                                th:text="${rt.tipe} + ' (' + ${rt.lokasi} + ')'"
+                                th:selected="${table.roomType != null and table.roomType.id == rt.id}">
+                        </option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                        <label class="form-label">Nomor Meja</label>
+                        <input type="text" th:field="*{tableNo}" class="form-control"
+                            placeholder="Misal: VIP-01 atau M-12">
+                        <span style="color: red; font-size: 12px;" th:if="${#fields.hasErrors('tableNo')}" th:errors="*{tableNo}"></span>
+                    </div>
+
+                    <div style="display: flex; gap: 15px;">
+                        <div class="form-group" style="flex: 1;">
+                            <label class="form-label">Kapasitas</label>
+                            <input id="capacity" type="number" th:field="*{capacity}" class="form-control"
+                                min="1" placeholder="Orang">
+                            <span style="color: red; font-size: 12px;" th:if="${#fields.hasErrors('capacity')}" th:errors="*{capacity}"></span>
+                        </div>
+
+                        <div class="form-group" style="flex: 1;">
+                            <label class="form-label">Jumlah (Qty)</label>
+                            <input type="number" th:field="*{quantity}" class="form-input form-control"
+                                min="1">
+                            <span style="color: red; font-size: 12px;" th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Status Meja</label>
+                        <select th:field="*{status}" class="form-select">
+                            <option value="AVAILABLE">Tersedia (Available)</option>
+                            <option value="OCCUPIED">Terisi (Occupied)</option>
+                            <option value="BOOKED">Dipesan (Booked)</option>
+                        </select>
+                    </div>
+
+                    <div style="display: flex; gap: 15px; margin-top: 10px;">
+                        <div class="form-group" style="flex: 1;">
+                            <label class="form-label">Harga per Kursi</label>
+                            <input id="pricePerPerson" type="number" th:field="*{pricePerPerson}" class="form-control"
+                                min="0" step="1000" value="0">
+                            <span style="color: red; font-size: 12px;" th:if="${#fields.hasErrors('pricePerPerson')}" th:errors="*{pricePerPerson}"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top:10px;">
+                        <label class="form-label">Harga Meja</label>
+                        <input id="totalPrice" type="text" class="form-control" readonly placeholder="0">
+                    </div>
+
+                    <div class="button-group">
+                        <a th:href="@{/admin/tables}" class="btn btn-secondary">Batal</a>
+                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/admin-navbar :: back-to-top}"></div>
+
+</body>
+<script>
+    (function () {
+        function toNumber(v) {
+            var n = parseFloat(v);
+            return isNaN(n) ? 0 : n;
+        }
+
+        function calculateTotal() {
+            var capacity = toNumber(document.getElementById('capacity')?.value);
+            var pricePerPerson = toNumber(document.getElementById('pricePerPerson')?.value);
+
+            // Formula: kapasitas * harga per orang
+            var total = capacity * pricePerPerson;
+
+            var out = document.getElementById('totalPrice');
+            if (out) {
+                out.value = total.toLocaleString('id-ID');
+            }
+        }
+
+        ['capacity', 'pricePerPerson'].forEach(function (id) {
+            var el = document.getElementById(id);
+            if (el) el.addEventListener('input', calculateTotal);
+        });
+
+        // initial calc on load
+        document.addEventListener('DOMContentLoaded', calculateTotal);
+    })();
+</script>
+
+</html>

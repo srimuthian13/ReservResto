@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Manajemen Meja | Admin</title>
+    <link rel="stylesheet" th:href="@{/css/admin-table-list.css}">
+</head>
+
+<body>
+    <header>
+        <h1>Data Meja Restoran</h1>
+    </header>
+    <div th:replace="~{fragments/admin-navbar :: navbar}"></div>
+
+    <div class="wrapper">
+
+        <form method="get" class="toolbar" th:action="@{/admin/tables}">
+            <input type="text" name="q" class="search-input" placeholder="Cari nomor meja..." th:value="${q}" />
+
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <label style="font-size: 13px; color: #64748b; font-weight: 500;">Sort:</label>
+                <select name="sort" class="select-input">
+                    <option value="" th:selected="${sort==''}">Default</option>
+                    <option value="tableNo" th:selected="${sort=='tableNo'}">Nomor Meja</option>
+                    <option value="capacity" th:selected="${sort=='capacity'}">Kapasitas</option>
+                </select>
+
+                <select name="dir" class="select-input">
+                    <option value="asc" th:selected="${dir=='asc'}">â†‘ Asc</option>
+                    <option value="desc" th:selected="${dir=='desc'}">â†“ Desc</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-search">Terapkan Filter</button>
+            <a th:href="@{/admin/tables/add}" class="btn btn-add">+ Tambah Meja</a>
+        </form>
+
+        <div class="card-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 80px;">ID</th>
+                        <th>Nomor Meja</th>
+                        <th>Kapasitas</th>
+                        <th>Jumlah (Qty)</th>
+                        <th>Status</th>
+                        <th style="text-align: center;">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="t : ${tables}">
+                        <td th:text="'#' + ${t.id}" style="color: #94a3b8; font-weight: 500;"></td>
+                        <td>
+                            <div style="font-weight: 600; color: var(--primary-blue);" th:text="'Meja ' + ${t.tableNo}">
+                            </div>
+                        </td>
+                        <td th:text="${t.capacity} + ' Orang'"></td>
+                        <td th:text="${t.quantity}"></td>
+                        <td>
+                            <span
+                                th:class="${t.status == 'AVAILABLE' ? 'badge status-available' : 'badge status-occupied'}"
+                                th:text="${t.status}">
+                            </span>
+                        </td>
+                        <td style="text-align: center;">
+                            <div class="action-links" style="justify-content: center;">
+                                <a th:href="@{/admin/tables/edit/{id}(id=${t.id})}" class="link-edit">Edit</a>
+                                <span style="color: #e2e8f0;">|</span>
+                                <a th:href="@{/admin/tables/delete/{id}(id=${t.id})}" class="link-delete"
+                                    onclick="return confirm('Hapus data meja ini?')">Hapus</a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(tables)}">
+                        <td colspan="6" style="text-align: center; padding: 40px; color: #94a3b8;">
+                            Data meja tidak ditemukan.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div th:replace="~{fragments/admin-navbar :: back-to-top}"></div>
+
+</body>
+
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - ReservResto</title>
+    <style>
+        :root {
+            --midnight-blue: #0d2c54;
+            --copper: #b26a4c;
+            --light-bg: #f4f7f9;
+            --text-dark: #2d3436;
+            --white: #ffffff;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--light-bg);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .page-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* CARD STYLE SAMA DENGAN ADMIN DASHBOARD */
+        .login-card {
+            width: 100%;
+            max-width: 400px;
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            border-left: 6px solid var(--copper);
+            /* Garis Cokelat Khas */
+        }
+
+        .login-header {
+            background: var(--midnight-blue);
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .login-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        .form-body {
+            padding: 40px 30px;
+        }
+
+        /* CUSTOM ALERT Tanpa Bootstrap */
+        .custom-alert {
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-error {
+            background: #fff5f5;
+            color: #c53030;
+            border: 1px solid #feb2b2;
+        }
+
+        .alert-success {
+            background: #f0fff4;
+            color: #276749;
+            border: 1px solid #9ae6b4;
+        }
+
+        /* INPUT GROUPS */
+        .input-group {
+            margin-bottom: 22px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--midnight-blue);
+            margin-bottom: 8px;
+        }
+
+        .input-field {
+            position: relative;
+        }
+
+        .input-field i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--copper);
+            font-size: 18px;
+        }
+
+        .input-field input {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border: 1.5px solid #edf2f7;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            outline: none;
+            background: #f8fafc;
+        }
+
+        .input-field input:focus {
+            border-color: var(--copper);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(178, 106, 76, 0.1);
+        }
+
+        /* BUTTON LOGIN */
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: var(--midnight-blue);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-login:hover {
+            background: #1a4a8a;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(13, 44, 84, 0.2);
+        }
+
+        /* CHECKBOX CUSTOM */
+        .remember-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #64748b;
+            cursor: pointer;
+        }
+
+        /* FOOTER REGISTER */
+        .register-footer {
+            margin-top: 25px;
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .register-footer p {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .register-footer a {
+            color: var(--copper);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .register-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-exit {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 35px;
+            height: 35px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 20;
+        }
+
+        .btn-exit:hover {
+            background: #b26a4c;
+            /* Berubah jadi merah saat hover */
+            transform: rotate(90deg);
+            color: white;
+        }
+
+        .btn-exit i {
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-container">
+
+        <div class="login-card">
+            <a th:href="@{/}" class="btn-exit" title="Kembali ke Landing Page" style="text-decoration: none;">
+                ✖
+            </a>
+            <div class="login-header">
+                <h1>Sign In</h1>
+            </div>
+
+            <div class="form-body">
+                <div class="custom-alert alert-error" th:if="${error}">
+                    <i class="bi bi-exclamation-circle-fill"></i>
+                    <span th:text="${error}"></span>
+                </div>
+
+                <div class="custom-alert alert-success" th:if="${message}">
+                    <i class="bi bi-check-circle-fill"></i>
+                    <span th:text="${message}"></span>
+                </div>
+
+                <form th:action="@{/login}" method="post">
+                    <div class="input-group">
+                        <label>Email Address</label>
+                        <div class="input-field">
+                            ✉️
+                            <input type="email" name="email" placeholder="nama@email.com" required>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Password</label>
+                        <div class="input-field">
+                            🔒
+                            <input type="password" name="password" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" required>
+                        </div>
+                    </div>
+
+                    <label class="remember-container">
+                        <input type="checkbox" style="accent-color: var(--copper);"> Remember me
+                    </label>
+
+                    <button type="submit" class="btn-login">Sign In</button>
+                </form>
+
+                <div class="register-footer">
+                    <p>Don't have an account? <a href="/register">Create Account</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

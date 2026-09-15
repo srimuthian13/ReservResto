@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Top-up Saldo | ReservResto</title>
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
+    <style>
+        /* BASE STYLING */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            background-color: #f8fafc;
+            color: #2d3436;
+        }
+
+        /* CONTAINER UNTUK MENENGAHKAN CARD */
+        .main-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 80px); /* Tinggi layar dikurangi tinggi navbar */
+            padding: 20px;
+        }
+
+        /* CARD STYLING */
+        .card {
+            background: #ffffff;
+            width: 100%;
+            max-width: 450px;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+            border: 1px solid #edf2f7;
+            text-align: center;
+        }
+
+        h3 {
+            color: #0d2c54;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 3px;
+            background: #b26a4c;
+            border-radius: 2px;
+        }
+
+        /* INFO SALDO */
+        .balance-display {
+            background: #f0f7ff;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 1px dashed #0d2c54;
+        }
+
+        .balance-label {
+            display: block;
+            font-size: 13px;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .balance-amount {
+            font-size: 26px;
+            font-weight: 800;
+            color: #2d3748;
+        }
+
+        /* FORM STYLING */
+        .form-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 14px;
+            color: #4a5568;
+            margin-bottom: 8px;
+        }
+
+        .input-amount {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .input-amount:focus {
+            border-color: #0d2c54;
+            box-shadow: 0 0 0 4px rgba(13, 44, 84, 0.1);
+        }
+
+        /* BUTTON STYLING */
+        .btn-topup {
+            width: 100%;
+            background: #0d2c54;
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 12px;
+            border: none;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(13, 44, 84, 0.2);
+        }
+
+        .btn-topup:hover {
+            background: #b26a4c;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(178, 106, 76, 0.3);
+        }
+
+        /* LINK KEMBALI */
+        .back-link {
+            display: inline-block;
+            margin-top: 25px;
+            color: #718096;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .back-link:hover {
+            color: #0d2c54;
+        }
+
+        /* ALERTS */
+        .alert {
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .alert-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .alert-error { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+    </style>
+</head>
+
+<body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <div class="main-container">
+        <div class="card">
+            <h3>Top-up Saldo</h3>
+
+            <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+            <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+            <div class="balance-display">
+                <span class="balance-label">Saldo Anda Sekarang</span>
+                <span class="balance-amount">Rp <span th:text="${user.balance}">0</span></span>
+            </div>
+
+            <form th:action="@{/user/{userId}/topup(userId=${user.id})}" method="post">
+                <div class="form-group">
+                    <label>Masukkan Nominal Top-up</label>
+                    <input type="number" name="amount" class="input-amount" placeholder="Contoh: 50000" min="1000" max="1000000" required/>
+                </div>
+                <input type="hidden" name="reservasiId" th:if="${reservasiId!=null}" th:value="${reservasiId}" />
+                
+                <button type="submit" class="btn-topup">Proses Top-up</button>
+            </form>
+
+            <div style="margin-top:12px;">
+                <a th:if="${reservasiId!=null}" th:href="@{/user/{userId}/reservasi(userId=${user.id})}" class="back-link">Simpan saja ke Riwayat (Belum Dibayar)</a>
+                <a th:if="${reservasiId==null}" th:href="@{/user/{id}/profile(id=${user.id})}" class="back-link">Kembali ke Profil</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

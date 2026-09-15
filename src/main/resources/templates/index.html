@@ -1,0 +1,179 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>ReservResto | Premium Dining Experience</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary: #0d2c54;
+            --secondary: #b26a4c;
+            --white: #ffffff;
+            --bg-light: #f8fafc;
+            --text-main: #1e293b;
+        }
+
+        body, html {
+            margin: 0; padding: 0; font-family: "Poppins", sans-serif;
+            background-color: var(--bg-light); color: var(--text-main); overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* HERO SECTION */
+        .hero-section {
+            position: relative; min-height: 100vh; width: 100%;
+            display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(rgba(13, 44, 84, 0.7), rgba(13, 44, 84, 0.7)),
+                        url("/assets/download.jpg") no-repeat center center/cover;
+            background-attachment: fixed; text-align: center; color: var(--white);
+            padding: 0 20px;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            padding: 70px 50px; border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            max-width: 650px; width: 100%; transform: translateY(20px); animation: fadeUp 1s ease forwards;
+        }
+
+        @keyframes fadeUp {
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .hero-title { font-family: 'Playfair Display', serif; font-size: 3.5rem; margin-bottom: 20px; font-weight: 600; letter-spacing: 2px; }
+        .hero-desc { font-size: 1.15rem; margin-bottom: 40px; font-weight: 300; opacity: 0.9; line-height: 1.6; }
+        
+        .btn-custom {
+            padding: 16px 35px; border-radius: 12px; font-weight: 600; font-size: 15px;
+            text-transform: uppercase; letter-spacing: 1px; text-decoration: none; display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary-custom { background: var(--secondary); color: var(--white); border: 2px solid var(--secondary); }
+        .btn-primary-custom:hover { background: transparent; color: var(--secondary); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(178, 106, 76, 0.3); }
+
+        .btn-outline-custom { background: transparent; color: var(--white); border: 2px solid rgba(255,255,255,0.5); margin-left: 15px; }
+        .btn-outline-custom:hover { background: var(--white); color: var(--primary); transform: translateY(-3px); }
+
+        /* SECTION STYLES */
+        .section-container { padding: 100px 20px; max-width: 1200px; margin: 0 auto; }
+        .section-title { text-align: center; font-family: 'Playfair Display', serif; font-size: 2.8rem; color: var(--primary); margin-bottom: 15px; }
+        .section-subtitle { text-align: center; color: #64748b; font-size: 1.1rem; margin-bottom: 60px; max-width: 600px; margin-inline: auto; }
+
+        /* AREAS GRID */
+        .areas-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .area-card {
+            border-radius: 20px; overflow: hidden; background: var(--white);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05); transition: 0.4s; position: relative;
+        }
+        .area-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .area-img { width: 100%; height: 250px; object-fit: cover; transition: 0.5s; }
+        .area-card:hover .area-img { transform: scale(1.05); }
+        .area-content { padding: 25px; position: relative; z-index: 2; background: var(--white); }
+        .area-title { font-size: 1.4rem; font-weight: 700; color: var(--primary); margin-bottom: 5px; }
+        .area-loc { color: var(--secondary); font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; display: block; }
+        
+        /* MENU HIGHLIGHTS */
+        .menu-section { background: var(--primary); color: var(--white); padding: 100px 20px; }
+        .menu-section .section-title { color: var(--white); }
+        .menu-section .section-subtitle { color: rgba(255,255,255,0.7); }
+        
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; }
+        .menu-card {
+            background: rgba(255, 255, 255, 0.05); border-radius: 20px; padding: 20px;
+            backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); text-align: center; transition: 0.3s;
+        }
+        .menu-card:hover { background: rgba(255, 255, 255, 0.1); transform: translateY(-5px); }
+        .menu-img { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; margin: 0 auto 20px; border: 4px solid rgba(255,255,255,0.1); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .menu-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 10px; }
+        .menu-price { color: var(--secondary); font-weight: 700; font-size: 1.1rem; }
+
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2.5rem; }
+            .btn-outline-custom { margin-left: 0; margin-top: 15px; }
+            .btn-custom { width: 100%; text-align: center; }
+            .glass-card { padding: 40px 30px; }
+        }
+    </style>
+</head>
+<body>
+    
+    <header>
+        <div th:replace="~{fragments/navbar :: navbar}"></div>
+    </header>
+
+    <main class="hero-section">
+        <div class="glass-card">
+            <h1 class="hero-title">ReservResto</h1>
+            <p class="hero-desc">
+                Ciptakan momen tak terlupakan dengan sajian kuliner premium dalam suasana yang eksklusif dan elegan. Pesan meja dan makanan Anda sekarang!
+            </p>
+            <div>
+                <a th:href="${session.userId != null ? '/reservasi' : '/login'}" class="btn-custom btn-primary-custom">Reservasi Sekarang</a>
+                <a th:if="${session.userId == null}" th:href="@{/login}" class="btn-custom btn-outline-custom">Masuk / Daftar</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- AREAS SHOWCASE -->
+    <section class="section-container">
+        <h2 class="section-title">Fasilitas & Area Eksklusif</h2>
+        <p class="section-subtitle">Pilih suasana terbaik yang sesuai dengan gaya dan acara Anda. Dari pertemuan bisnis hingga makan malam romantis.</p>
+        
+        <div class="areas-grid">
+            <div th:if="${#lists.isEmpty(areas)}" style="text-align: center; grid-column: 1/-1; color: #94a3b8;">Belum ada area yang ditambahkan.</div>
+            
+            <div class="area-card" th:each="a : ${areas}">
+                <img th:if="${a.imagePath != null}" th:src="@{'/uploads/roomtypes/' + ${a.imagePath}}" class="area-img">
+                <img th:if="${a.imagePath == null}" src="/assets/download.jpg" class="area-img" style="filter: grayscale(100%); opacity: 0.5;">
+                <div class="area-content">
+                    <span class="area-loc" th:text="${a.lokasi}"><i class="bi bi-geo-alt-fill"></i> Rooftop</span>
+                    <h3 class="area-title" th:text="${a.tipe}">VIP Lounge</h3>
+                    <p style="color: #64748b; font-size: 0.95rem; margin-bottom: 15px;" th:text="${a.deskripsi} ?: 'Area eksklusif untuk kenyamanan Anda.'"></p>
+                    <div style="font-weight: 700; color: var(--primary);">
+                        Fee: <span th:text="${a.price == 0 ? 'Gratis' : 'Rp ' + #numbers.formatDecimal(a.price, 0, 'POINT', 0, 'COMMA')}"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MENU HIGHLIGHTS (DUMMY SHOWCASE FOR LANDING PAGE) -->
+    <section class="menu-section">
+        <h2 class="section-title">Menu Spesial</h2>
+        <p class="section-subtitle">Rekomendasi hidangan favorit yang menjadi ciri khas dan kebanggaan restoran kami.</p>
+        
+        <div class="menu-grid">
+            <div class="menu-card">
+                <img th:src="@{/assets/sushi.jpeg}" src="/assets/sushi.jpeg" class="menu-img" alt="Sushi Well">
+                <h4 class="menu-title">Sushi Well</h4>
+                <p style="font-size: 0.85rem; color: rgba(255,255,255,0.7); margin-bottom: 10px;">Salmon / Tempura / Kani / Timun / Telur Ikan</p>
+            </div>
+
+            <div class="menu-card">
+                <img th:src="@{/assets/Tteokbokki.jpg}" src="/assets/Tteokbokki.jpg" class="menu-img" alt="Tteokbokki">
+                <h4 class="menu-title">Tteokbokki</h4>
+                <p style="font-size: 0.85rem; color: rgba(255,255,255,0.7); margin-bottom: 10px;">Saus Gochujang / Telur Rebus / Fish Cake</p>
+            </div>
+
+            <div class="menu-card">
+                <img th:src="@{/assets/bimbap.jpg}" src="/assets/bimbap.jpg" class="menu-img" alt="Bibimbap">
+                <h4 class="menu-title">Bibimbap</h4>
+                <p style="font-size: 0.85rem; color: rgba(255,255,255,0.7); margin-bottom: 10px;">Daging Sapi / Telur Onsen / Sayuran / Nasi</p>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 40px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+            <a th:if="${session.userId != null}" th:href="@{/menu}" class="btn-custom btn-primary-custom" style="background: var(--white); color: var(--primary); border-color: var(--white);">Lihat Semua Menu</a>
+            <a th:href="${session.userId != null ? '/reservasi' : '/login'}" class="btn-custom btn-primary-custom">Buat Reservasi</a>
+        </div>
+    </section>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Manajemen Room Type | Admin</title>
+    <link rel="stylesheet" th:href="@{/css/admin-room-form.css}">
+</head>
+
+<body>
+    <div th:replace="~{fragments/admin-navbar :: navbar}"></div>
+
+    <div class="container">
+        <div class="card">
+            <h2 th:text="${roomType.id == null ? 'Tambah Room Type' : 'Edit Room Type'}"></h2>
+
+            <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+            <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+            <form th:action="@{/admin/roomtypes/save}" th:object="${roomType}" method="post"
+                enctype="multipart/form-data">
+                <input type="hidden" th:field="*{id}" />
+                <input type="hidden" th:field="*{imagePath}" />
+
+                <div class="form-group">
+                    <label>Nama Tipe</label>
+                    <input type="text" th:field="*{tipe}" class="form-input" placeholder="Masukkan nama tipe..."
+                        required />
+                </div>
+
+                <div class="form-group">
+                    <label>Lokasi</label>
+                    <input type="text" th:field="*{lokasi}" class="form-input"
+                        placeholder="Contoh: Lantai 2, Area Outdoor" />
+                </div>
+
+                <div class="form-group">
+                    <label>Harga Sewa (Rp)</label>
+                    <input type="number" th:field="*{price}" class="form-input" required min="0" max="10000000"
+                        step="1000" />
+                    <div th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="error-msg"></div>
+                    <div class="helper-text">Nilai Rp 0 ke atas</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Deskripsi</label>
+                    <textarea th:field="*{deskripsi}" class="form-input" rows="4"
+                        placeholder="Tuliskan detail ruangan..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #1e293b;">Gambar
+                        Ruangan</label>
+
+                    <input type="file" name="imageFile" id="imageInput" accept="image/*" class="form-input"
+                        style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px;" />
+
+                    <div id="newPreviewContainer"
+                        style="display: none; margin-top: 15px; padding: 15px; background: #f0fdf4; border-radius: 10px; border: 1px solid #bbf7d0;">
+                        <p style="font-size: 12px; color: #166534; margin-bottom: 8px; font-weight: 600;">
+                            <i class="bi bi-eye"></i> Preview gambar baru:
+                        </p>
+                        <img id="imagePreview" src="#" alt="Preview"
+                            style="max-width: 200px; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
+                    </div>
+
+                    <div th:if="${roomType.imagePath != null and !#strings.isEmpty(roomType.imagePath)}"
+                        id="currentImageContainer"
+                        style="margin-top: 15px; padding: 15px; background: #f8fafc; border-radius: 10px; border: 1px solid #e2e8f0;">
+                        <p style="font-size: 12px; color: #64748b; margin-bottom: 8px;">Gambar saat ini di server:</p>
+                        <img th:src="@{'/uploads/roomtypes/' + ${roomType.imagePath}}"
+                            style="max-width: 200px; border-radius: 8px;" onerror="this.style.display='none'" />
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button type="submit" class="btn btn-submit">Simpan Data</button>
+                    <a th:href="@{/admin/roomtypes}" class="btn btn-cancel">Batal</a>
+                </div>
+            </form>
+        </div>
+    </div>
+        <div th:replace="~{fragments/admin-navbar :: back-to-top}"></div>
+
+</body>
+
+<script>
+    document.getElementById('imageInput').onchange = function (evt) {
+        const [file] = this.files;
+        const previewContainer = document.getElementById('newPreviewContainer');
+        const previewImage = document.getElementById('imagePreview');
+        const currentContainer = document.getElementById('currentImageContainer');
+
+        if (file) {
+            // Baca file dan tampilkan ke tag img
+            previewImage.src = URL.createObjectURL(file);
+
+            // Tampilkan container preview baru
+            previewContainer.style.display = 'block';
+
+            // Beri efek transparan pada gambar lama agar user tahu gambar akan diganti
+            if (currentContainer) {
+                currentContainer.style.opacity = '0.4';
+            }
+        }
+    };
+</script>
+
+</html>

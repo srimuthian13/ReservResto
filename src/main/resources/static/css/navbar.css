@@ -1,0 +1,155 @@
+/* NAVBAR CONTAINER */
+.navbar-custom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 8%;
+    height: 80px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+/* LOGO STYLING */
+.nav-logo a {
+    text-decoration: none;
+}
+
+.nav-logo h1 {
+    font-size: 24px;
+    color: #0d2c54; /* Midnight Blue */
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.nav-logo h1 span {
+    color: #b26a4c; /* Brown Accent */
+}
+
+/* MENU TENGAH */
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+}
+
+.nav-links li a {
+    text-decoration: none;
+    color: #2d3436;
+    font-size: 15px;
+    font-weight: 600;
+    transition: 0.3s;
+    position: relative;
+    padding: 5px 0;
+}
+
+/* Efek Garis Bawah saat Hover */
+.nav-links li a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background: #b26a4c;
+    bottom: 0;
+    left: 0;
+    transition: 0.3s;
+}
+
+.nav-links li a:hover::after, 
+.nav-links li a.active::after {
+    width: 100%;
+}
+
+.nav-links li a:hover {
+    color: #b26a4c;
+}
+
+/* NAV KANAN / AUTH */
+.nav-auth {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.btn-signin {
+    text-decoration: none;
+    background-color: #0d2c54;
+    color: white !important;
+    padding: 10px 25px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.btn-signin:hover {
+    background-color: #b26a4c;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(178, 106, 76, 0.3);
+}
+
+.admin-tools a {
+    text-decoration: none;
+    color: #0d2c54;
+    font-weight: 600;
+    font-size: 14px;
+    margin-left: 10px;
+}
+
+.btn-logout-small {
+    color: #e74c3c !important;
+}
+
+/* MOBILE MENU BUTTON */
+.mobile-menu-btn {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+}
+
+/* Spacer element to avoid content being hidden under fixed navbar */
+.navbar-spacer {
+    height: 80px; /* same as .navbar-custom height */
+}
+
+.mobile-menu-btn span {
+    width: 25px;
+    height: 3px;
+    background: #0d2c54;
+    border-radius: 2px;
+}
+
+/* ========================= */
+/* RESPONSIVE (MOBILE)       */
+/* ========================= */
+@media (max-width: 992px) {
+    .navbar-custom {
+        padding: 0 5%;
+    }
+    
+    .nav-links {
+        display: none; /* Disembunyikan dulu di mobile */
+        flex-direction: column;
+        position: absolute;
+        top: 80px;
+        left: 0;
+        width: 100%;
+        background: white;
+        padding: 20px;
+        box-shadow: 0 10px 10px rgba(0,0,0,0.05);
+        text-align: center;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .mobile-menu-btn {
+        display: flex;
+    }
+}

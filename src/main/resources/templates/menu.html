@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReservResto | Buku Menu</title>
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <style>
+        :root {
+            --primary: #0d2c54;
+            --secondary: #b26a4c;
+            --bg-light: #f8fafc;
+            --white: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+        }
+
+        .menu-banner {
+            background: linear-gradient(rgba(13, 44, 84, 0.85), rgba(13, 44, 84, 0.85)),
+                        url("/assets/download.jpg") no-repeat center center/cover;
+            color: var(--white);
+            text-align: center;
+            padding: 70px 20px 50px;
+        }
+
+        .menu-banner h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .menu-banner p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.85);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .menu-container {
+            max-width: 1200px;
+            margin: 40px auto 80px;
+            padding: 0 20px;
+        }
+
+        /* SPECIAL SHOWCASE SECTION */
+        .showcase-section {
+            margin-bottom: 60px;
+        }
+
+        .showcase-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .showcase-header span {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: var(--secondary);
+            font-weight: 700;
+            display: block;
+        }
+
+        .showcase-header h2 {
+            font-size: 2.2rem;
+            color: var(--primary);
+            font-weight: 800;
+            margin-top: 4px;
+        }
+
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .showcase-card {
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border: 1px solid #edf2f7;
+            transition: all 0.3s ease;
+        }
+
+        .showcase-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(13, 44, 84, 0.1);
+        }
+
+        .showcase-img-box {
+            position: relative;
+            height: 220px;
+            overflow: hidden;
+        }
+
+        .showcase-img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .showcase-card:hover .showcase-img-box img {
+            transform: scale(1.08);
+        }
+
+        .showcase-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--primary);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 13px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .showcase-content {
+            padding: 22px;
+        }
+
+        .showcase-title {
+            color: var(--primary);
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+        }
+
+        .showcase-desc {
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        /* FILTER BUTTONS */
+        .category-filter {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 40px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 40px;
+        }
+
+        .filter-btn {
+            background: var(--white);
+            border: 2px solid #e2e8f0;
+            color: var(--text-muted);
+            padding: 10px 22px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(13, 44, 84, 0.15);
+        }
+
+        /* MENU GRID */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .menu-card {
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #f1f5f9;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-img-wrapper {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+            background: #e2e8f0;
+        }
+
+        .menu-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .menu-card:hover .menu-img-wrapper img {
+            transform: scale(1.08);
+        }
+
+        .no-img-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            font-size: 14px;
+            font-weight: 500;
+            background: #f1f5f9;
+        }
+
+        .category-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(13, 44, 84, 0.85);
+            backdrop-filter: blur(5px);
+            color: var(--white);
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            text-transform: capitalize;
+        }
+
+        .menu-details {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .menu-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 0 0 8px 0;
+        }
+
+        .menu-desc {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .menu-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 1px solid #f1f5f9;
+            padding-top: 15px;
+            margin-top: auto;
+        }
+
+        .menu-price {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .btn-order {
+            padding: 10px 18px;
+            background: var(--primary);
+            color: var(--white);
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .btn-order:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .empty-menu {
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-menu i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+            color: #cbd5e1;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div th:replace="~{fragments/navbar :: navbar}"></div>
+    </header>
+
+    <section class="menu-banner">
+        <h1>Buku Menu Restoran</h1>
+        <p>Jelajahi kelezatan hidangan mahakarya koki profesional kami dan nikmati kemudahan memesannya saat melakukan reservasi meja!</p>
+    </section>
+
+    <div class="menu-container">
+
+        <!-- CATEGORY FILTER BUTTONS FOR DATABASE MENUS -->
+        <div class="category-filter" id="filterButtons">
+            <button class="filter-btn active" onclick="filterCategory('all')">Semua Menu Database</button>
+            <button class="filter-btn" onclick="filterCategory('Makanan Utama')">Makanan Utama</button>
+            <button class="filter-btn" onclick="filterCategory('Minuman')">Minuman</button>
+            <button class="filter-btn" onclick="filterCategory('Dessert')">Dessert</button>
+        </div>
+
+        <!-- DATABASE MENU CARDS GRID -->
+        <div class="menu-grid">
+            <div th:if="${#lists.isEmpty(menus)}" class="empty-menu">
+                <i class="bi bi-journal-x"></i>
+                <h3>Belum Ada Menu Tersedia</h3>
+                <p>Silakan hubungi administrator atau cek kembali nanti.</p>
+            </div>
+
+            <div class="menu-card" th:each="m : ${menus}" th:data-category="${m.category}">
+                <div class="menu-img-wrapper">
+                    <img th:if="${m.imagePath != null and !m.imagePath.isEmpty()}" 
+                         th:src="@{'/uploads/menus/' + ${m.imagePath}}" 
+                         th:alt="${m.name}">
+                    <div th:if="${m.imagePath == null or m.imagePath.isEmpty()}" class="no-img-placeholder">
+                        <i class="bi bi-cup-hot-fill" style="font-size: 24px; margin-right: 8px;"></i> ReservResto
+                    </div>
+                    <span class="category-badge" th:text="${m.category}">Kategori</span>
+                </div>
+
+                <div class="menu-details">
+                    <h3 class="menu-title" th:text="${m.name}">Nama Menu</h3>
+                    <p class="menu-desc" th:text="${m.description} ?: 'Hidangan lezat khas ReservResto disajikan segar.'"></p>
+
+                    <div class="menu-bottom">
+                        <span class="menu-price" th:text="'Rp ' + ${#numbers.formatDecimal(m.price, 0, 'POINT', 0, 'COMMA')}">Rp 0</span>
+                        
+                        <a th:href="@{/reservasi}" class="btn-order">
+                            <i class="bi bi-cart-plus-fill"></i> Pesan & Reservasi
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function filterCategory(cat) {
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            const cards = document.querySelectorAll('.menu-card');
+            cards.forEach(card => {
+                const cardCat = card.getAttribute('data-category');
+                if (cat === 'all' || cardCat.toLowerCase().trim() === cat.toLowerCase().trim()) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

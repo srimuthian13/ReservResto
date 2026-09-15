@@ -1,0 +1,65 @@
+<header th:fragment="navbar">
+    <nav class="navbar-custom">
+        <div class="nav-logo">
+            <a th:href="${session.userId != null ? '/home' : '/'}">
+                <h1>Reserv<span>Rest</span></h1>
+            </a>
+        </div>
+
+        <ul class="nav-links">
+            <li><a th:href="${session.userId != null ? '/home' : '/'}" id="nav-beranda">Beranda</a></li>
+            <li><a th:href="${session.userId != null ? '/menu' : '/login'}" id="nav-menu">Menu</a></li>
+            <li><a th:href="${session.userId != null ? '/reservasi' : '/login'}" id="nav-reservasi">Reservasi</a></li>
+            <li th:if="${session.userId != null}">
+                <a th:href="@{/user/{id}/profile(id=${session.userId})}" id="nav-akun">Akun</a>
+            </li>
+        </ul>
+
+        <div class="nav-auth">
+            <a th:if="${session.role == null}" th:href="@{/login}" class="btn-signin">Masuk</a>
+
+            <div th:if="${session.role == 'USER'}" class="user-tools" style="display: flex; align-items: center; gap: 10px;">
+                <a th:href="@{/logout}" class="btn-logout-small" onclick="return confirm('Keluar dari akun?')">Logout</a>
+            </div>
+
+            <div th:if="${session.role == 'ADMIN'}" class="admin-tools">
+                <a th:href="@{/admin/dashboard}">Dashboard</a>
+                <a th:href="@{/logout}" class="btn-logout-small">Logout</a>
+            </div>
+            
+            <div class="mobile-menu-btn" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+    <div class="navbar-spacer"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var path = window.location.pathname;
+            var beranda = document.getElementById('nav-beranda');
+            var menu = document.getElementById('nav-menu');
+            var reservasi = document.getElementById('nav-reservasi');
+            var akun = document.getElementById('nav-akun');
+
+            if (path === '/' || path === '/home') {
+                if (beranda) beranda.classList.add('active');
+            } else if (path.indexOf('/menu') === 0) {
+                if (menu) menu.classList.add('active');
+            } else if (path.indexOf('/reservasi') === 0) {
+                if (reservasi) reservasi.classList.add('active');
+            } else if (path.indexOf('/user/') === 0) {
+                if (akun) akun.classList.add('active');
+            }
+        });
+
+        function toggleMenu() {
+            var navLinks = document.querySelector('.nav-links');
+            if (navLinks) {
+                navLinks.classList.toggle('active');
+            }
+        }
+    </script>
+</header>

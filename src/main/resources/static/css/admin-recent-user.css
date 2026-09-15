@@ -1,0 +1,157 @@
+        :root {
+            --primary-blue: #0d2c54;
+            --accent-copper: #b26a4c;
+            --bg-light: #f4f7fa;
+            --text-dark: #1e293b;
+            --border-color: #e2e8f0;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            margin: 0;
+            color: var(--text-dark);
+        }
+
+        /* Container dengan margin seimbang */
+        .wrapper {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 40px;
+        }
+
+        header {
+            background: var(--primary-blue);
+            color: #fff;
+            padding: 20px 40px;
+            margin-bottom: 25px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            margin-left: 20px;
+        }
+
+        /* Search Bar & Filter */
+        .toolbar {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            border: 1px solid var(--border-color);
+            margin-bottom: 25px;
+        }
+
+        .search-input {
+            flex-grow: 1;
+            padding: 10px 15px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(13, 44, 84, 0.1);
+        }
+
+        /* Tombol */
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .btn-search {
+            background: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .btn-search:hover {
+            background: #1a3a61;
+        }
+
+        /* Tabel User */
+        .card-table {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f8fafc;
+            color: #64748b;
+            font-weight: 600;
+            padding: 16px 20px;
+            font-size: 13px;
+            text-transform: uppercase;
+            text-align: left;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        td {
+            padding: 16px 20px;
+            font-size: 14px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        tr:hover {
+            background-color: #f9fafb;
+        }
+
+        /* Link Aksi bergaya Button */
+        .action-link {
+            color: var(--white);
+            background-color: var(--accent-copper);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        .action-link:hover {
+            opacity: 0.9;
+        }
+
+        .user-id {
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: var(--primary-blue);
+        }
+
+        @media (max-width: 768px) {
+            .wrapper { padding: 0 20px; }
+            .toolbar { flex-direction: column; align-items: stretch; }
+        }

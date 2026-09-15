@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Reservasi Meja | ReservResto</title>
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <style>
+        :root {
+            --primary: #0d2c54;
+            --secondary: #b26a4c;
+            --bg-light: #f8fafc;
+            --white: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f6f9fc 0%, #eef2f7 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            /* Diperlebar untuk layout 2 kolom */
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        .reservation-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            /* Info di kiri, Form di kanan */
+            gap: 40px;
+            background: var(--white);
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+        }
+
+        /* LEFT SIDE: INFO */
+        .info-sidebar {
+            background: var(--primary);
+            padding: 40px;
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .info-sidebar h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        .info-sidebar p {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 30px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .info-item i {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        /* RIGHT SIDE: FORM */
+        .form-container {
+            padding: 40px;
+        }
+
+        .form-container h3 {
+            font-size: 22px;
+            margin-bottom: 30px;
+            color: var(--primary);
+            position: relative;
+        }
+
+        .form-container h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -8px;
+            width: 40px;
+            height: 3px;
+            background: var(--secondary);
+        }
+
+        .mb-3 {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .form-control,
+        .form-select {
+            border: 2px solid #f1f5f9;
+            background: #f8fafc;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(13, 44, 84, 0.05);
+        }
+
+        .btn-submit {
+            background: var(--primary);
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 700;
+            width: 100%;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(178, 106, 76, 0.2);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 850px) {
+            .reservation-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .info-sidebar {
+                padding: 30px;
+                text-align: center;
+            }
+
+            .info-item {
+                justify-content: center;
+            }
+        }
+
+    </style>
+
+<body>
+    <header>
+        <div th:replace="~{fragments/navbar :: navbar}"></div>
+    </header>
+
+
+    <div class="container">
+        <div class="reservation-wrapper">
+            
+            <div class="info-sidebar">
+                <h2>Book Your Table</h2>
+                <p>Nikmati perpaduan rasa Asia modern dalam suasana yang hangat dan eksklusif.</p>
+
+                <div class="info-item">
+                    <span>Lokasi: </span>
+                    <p>Jl. Asia Afrika No. 123, Bandung</p>
+                </div>
+                <div class="info-item">
+                    <span>Waktu: </span>
+                    <p>09.00 - 22.00 (Setiap Hari)</p>
+                </div>
+                <div class="info-item">
+                    <span>Telepon: </span>
+                    <p>+62 812 3456 7890</p>
+                </div>
+            </div>
+
+            <div class="form-container">
+                <h3>Detail Reservasi</h3>
+
+                <div th:if="${session.userId == null}" style="text-align: center; padding: 20px;">
+                    <p style="color: #e53e3e;">Silakan <a th:href="@{/login}"
+                            style="font-weight: bold; color: var(--primary);">Login</a> untuk memesan meja.</p>
+                </div>
+
+                <div th:if="${error}" style="color: #e53e3e; text-align: center; margin-bottom: 15px;" th:text="${error}"></div>
+                <div th:if="${message}" style="color: green; text-align: center; margin-bottom: 15px;" th:text="${message}"></div>
+
+                <form th:action="@{/create/form}" method="post" th:if="${session.userId != null}" id="reservationForm">
+                    <input type="hidden" name="userId" th:value="${session.userId}" />
+                    
+                    <!-- STEP 1: Date, Time & Guests -->
+                    <div id="step1">
+                        <div class="mb-3">
+                            <label class="form-label">Waktu Kedatangan</label>
+                            <input type="datetime-local" id="reservasiTime" name="reservasiTime" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Durasi (Menit)</label>
+                            <select id="durationMinutes" name="durationMinutes" class="form-select" required>
+                                <option value="60" selected>1 Jam</option>
+                                <option value="90">1 Jam 30 Menit</option>
+                                <option value="120">2 Jam</option>
+                                <option value="180">3 Jam</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Jumlah Tamu</label>
+                            <input type="number" id="totalGuest" name="totalGuest" class="form-control" min="1" required>
+                        </div>
+                        <button type="button" class="btn-submit" onclick="checkAvailability()">Cari Meja Tersedia</button>
+                    </div>
+
+                    <!-- STEP 2: Pick Table & Details -->
+                    <div id="step2" style="display: none;">
+                        <button type="button" onclick="goBack()" style="background: none; border: none; color: var(--primary); text-decoration: underline; cursor: pointer; margin-bottom: 15px;">&larr; Kembali</button>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Pilih Meja</label>
+                            <select id="tableSelect" name="tableId" class="form-select" required>
+                                <option value="" disabled selected>Pilih meja ...</option>
+                                <!-- Populated by JS -->
+                            </select>
+                            <small id="tableHelp" style="color: var(--text-muted); display: block; margin-top: 5px;"></small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Nama Lengkap</label>
+                            <input type="text" name="customerName" class="form-control" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Nomor HP</label>
+                            <input type="text" name="customerPhone" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Catatan Tambahan (Opsional)</label>
+                            <textarea name="notes" class="form-control" rows="3"></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-wrap: wrap; gap: 10px;">
+                                <div>
+                                    <label class="form-label" style="color: var(--secondary); font-size: 15px; margin: 0;">Ingin Memesan Menu Makanan? (Opsional)</label>
+                                    <p style="font-size: 12px; color: var(--text-muted); margin: 2px 0 0 0;">Pesan hidangan agar langsung disajikan saat Anda datang.</p>
+                                </div>
+                                <button type="button" id="btnToggleMenu" onclick="toggleMenuSection()" style="background: #f8fafc; border: 2px dashed var(--secondary); color: var(--secondary); padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                                    + Tambah Pesanan Menu
+                                </button>
+                            </div>
+                            
+                            <div id="menuPreorderContainer" style="display: none; transition: all 0.3s ease; margin-top: 15px;">
+                                <div style="max-height: 280px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; background: #f8fafc;">
+                                    <div th:if="${#lists.isEmpty(menus)}" style="text-align: center; color: #94a3b8; font-size: 13px;">Belum ada menu tersedia.</div>
+                                    
+                                    <div th:each="m : ${menus}" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #e2e8f0;">
+                                        <div style="display: flex; align-items: center; gap: 15px;">
+                                            <img th:if="${m.imagePath != null}" th:src="@{'/uploads/menus/' + ${m.imagePath}}" style="width: 55px; height: 55px; object-fit: cover; border-radius: 10px;">
+                                            <div th:if="${m.imagePath == null}" style="width: 55px; height: 55px; background: #e2e8f0; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #94a3b8;">No Image</div>
+                                            
+                                            <div>
+                                                <strong th:text="${m.name}" style="display: block; font-size: 14px;"></strong>
+                                                <span style="font-size: 12px; color: var(--secondary); font-weight: 600;" th:text="'Rp ' + ${#numbers.formatDecimal(m.price, 0, 'POINT', 0, 'COMMA')}"></span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            <input type="checkbox" name="menuIds" th:value="${m.id}" class="menu-checkbox" style="width: 18px; height: 18px; cursor: pointer;">
+                                            <input type="number" name="menuQtys" min="1" value="1" style="width: 50px; padding: 5px; border: 1px solid #cbd5e1; border-radius: 5px; text-align: center;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-submit">Konfirmasi Reservasi</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function checkAvailability() {
+            const time = document.getElementById('reservasiTime').value;
+            const duration = document.getElementById('durationMinutes').value;
+            const guest = document.getElementById('totalGuest').value;
+
+            if(!time || !duration || !guest) {
+                alert("Harap isi waktu, durasi, dan jumlah tamu.");
+                return;
+            }
+
+            fetch(`/api/tables/available?reservasiTime=${time}&durationMinutes=${duration}&guestCount=${guest}`)
+                .then(res => {
+                    if(!res.ok) throw new Error("Terjadi kesalahan atau di luar jam operasional.");
+                    return res.json();
+                })
+                .then(data => {
+                    const select = document.getElementById('tableSelect');
+                    const help = document.getElementById('tableHelp');
+                    select.innerHTML = '<option value="" disabled selected>Pilih meja ...</option>';
+                    
+                    if(data.length === 0) {
+                        help.innerText = "Maaf, tidak ada meja tersedia untuk waktu dan kapasitas tersebut.";
+                    } else {
+                        help.innerText = `${data.length} meja tersedia.`;
+                        data.forEach(table => {
+                            const areaName = table.roomType ? table.roomType.tipe + ' (' + table.roomType.lokasi + ')' : 'Area Umum';
+                            const areaPrice = table.roomType && table.roomType.price > 0 ? ' - Fee: Rp ' + table.roomType.price : '';
+                            select.innerHTML += `<option value="${table.id}">Meja ${table.tableNo} - ${areaName} (Kapasitas: ${table.capacity})${areaPrice}</option>`;
+                        });
+                        
+                        // Show Step 2
+                        document.getElementById('step1').style.display = 'none';
+                        document.getElementById('step2').style.display = 'block';
+                    }
+                })
+                .catch(err => {
+                    alert(err.message);
+                });
+        }
+        
+        function goBack() {
+            document.getElementById('step1').style.display = 'block';
+            document.getElementById('step2').style.display = 'none';
+        }
+
+        function toggleMenuSection() {
+            const container = document.getElementById('menuPreorderContainer');
+            const btn = document.getElementById('btnToggleMenu');
+            if (container.style.display === 'none' || container.style.display === '') {
+                container.style.display = 'block';
+                btn.innerHTML = '✖ Batal Tambah Menu';
+                btn.style.background = '#fff5f5';
+                btn.style.color = '#c53030';
+                btn.style.borderColor = '#feb2b2';
+            } else {
+                container.style.display = 'none';
+                btn.innerHTML = '+ Tambah Pesanan Menu';
+                btn.style.background = '#f8fafc';
+                btn.style.color = 'var(--secondary)';
+                btn.style.borderColor = 'var(--secondary)';
+                const checkboxes = document.querySelectorAll('.menu-checkbox');
+                checkboxes.forEach(cb => cb.checked = false);
+            }
+        }
+    </script>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+
+</html>

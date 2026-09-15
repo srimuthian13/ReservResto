@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Detail Reservasi</title>
+    <link rel="stylesheet" th:href="@{/css/admin-reserv-detail.css}">
+
+</head>
+
+<body>
+
+    <div th:replace="~{fragments/admin-navbar :: navbar}"></div>
+
+    <div class="container">
+        <div class="main-card">
+            <div class="card-header">
+                <div>
+                    <span style="font-size: 12px; opacity: 0.8;">ID RESERVASI</span>
+                    <h2 th:text="'#' + ${reservasi.idReservasi}">#12345</h2>
+                </div>
+                <div class="status-pill" th:text="${reservasi.status}">CONFIRMED</div>
+            </div>
+
+            <div class="content-body">
+                <div class="section-title">ðŸ‘¤ Informasi Pelanggan & Meja</div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Nama Pelanggan</label>
+                        <span th:text="${reservasi.user != null ? reservasi.user.name : '-'}">Nama Pelanggan</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Kontak</label>
+                        <span th:text="${reservasi.user != null ? (reservasi.user.email + ' / ' + reservasi.user.phoneNumber) : '-'}">Email / Phone</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Nomor Meja</label>
+                        <span th:text="${reservasi.table != null ? 'Meja ' + reservasi.table.tableNo : '-'}">Meja 01</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Kapasitas Meja</label>
+                        <span th:text="${reservasi.table != null ? reservasi.table.capacity + ' Orang' : '-'}">4 Orang</span>
+                    </div>
+                </div>
+
+                <div class="section-title">ðŸ“… Jadwal Reservasi</div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Waktu Mulai</label>
+                        <span th:text="${reservasi.reservasiTime != null ? #temporals.format(reservasi.reservasiTime,'dd MMMM yyyy HH:mm') : '-'}">01 Jan 2024</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Waktu Berakhir</label>
+                        <span th:text="${reservasi.endTime != null ? #temporals.format(reservasi.endTime,'dd MMMM yyyy HH:mm') : '-'}">01 Jan 2024</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Durasi</label>
+                        <span th:text="${reservasi.durationMinutes + ' Menit'}">60 Menit</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Dibuat Pada</label>
+                        <span th:text="${#temporals.format(reservasi.bookingTime,'dd/MM/yy HH:mm')}">01/01/24</span>
+                    </div>
+                </div>
+
+                <div class="section-title">ðŸ’³ Rincian Pembayaran</div>
+                <div class="info-grid" style="margin-bottom: 20px;">
+                    <div class="info-item">
+                        <label>Metode Pembayaran</label>
+                        <span th:text="${reservasi.payment != null ? reservasi.payment.paymentMethod : '-'}">E-Wallet</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Status Pembayaran</label>
+                        <span th:class="'badge-payment ' + ${reservasi.paymentStatus}" th:text="${reservasi.paymentStatus}">PAID</span>
+                    </div>
+                </div>
+
+                <table class="detail-table">
+                    <thead>
+                        <tr>
+                            <th>Rincian Item / Layanan</th>
+                            <th>Qty</th>
+                            <th style="text-align: right;">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- BIAYA AREA / RUANGAN MEJA -->
+                        <tr th:if="${reservasi.table != null and reservasi.table.roomType != null and reservasi.table.roomType.price > 0}">
+                            <td>
+                                <strong th:text="'Biaya Area/Ruangan (' + ${reservasi.table.roomType.tipe} + ' - ' + ${reservasi.table.roomType.lokasi} + ')'">Biaya Area</strong>
+                            </td>
+                            <td>1</td>
+                            <td style="text-align: right; font-weight: 600;" th:text="'Rp ' + ${#numbers.formatDecimal(reservasi.table.roomType.price, 0, 'POINT', 0, 'COMMA')}">Rp 0</td>
+                        </tr>
+
+                        <!-- ITEM PESANAN MAKANAN PRE-ORDER -->
+                        <tr th:each="d : ${reservasi.details}">
+                            <td>
+                                <span th:text="${d.menu != null ? d.menu.name : (d.roomType != null ? d.roomType.tipe : 'Item')}" style="font-weight: 500;">Menu</span>
+                            </td>
+                            <td th:text="${d.quantity}">1</td>
+                            <td style="text-align: right; font-weight: 600;" th:text="'Rp ' + ${#numbers.formatDecimal(d.subtotal, 0, 'POINT', 0, 'COMMA')}">Rp 0</td>
+                        </tr>
+
+                        <!-- TOTAL PEMBAYARAN -->
+                        <tr class="total-row">
+                            <td colspan="2" style="text-align:right">TOTAL PEMBAYARAN</td>
+                            <td style="text-align: right; font-size: 16px; color: var(--accent-copper);" 
+                                th:text="'Rp ' + ${#numbers.formatDecimal(reservasi.payment != null ? reservasi.payment.totalHarga : 0, 0, 'POINT', 0, 'COMMA')}">
+                                Rp 0
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div th:if="${reservasi.payment != null and reservasi.payment.proofOfPayment != null}" style="margin-top: 30px; padding: 20px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px;">
+                    <h4 style="color: var(--primary-blue); margin-top:0;">Bukti Pembayaran</h4>
+                    <img th:src="@{'/uploads/' + ${reservasi.payment.proofOfPayment}}" style="max-width: 400px; max-height: 400px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 20px; display:block;" alt="Bukti Pembayaran">
+                    
+                    <div th:if="${reservasi.paymentStatus == 'WAITING_VERIFICATION'}">
+                        <form th:action="@{/admin/reservasi/verify-payment}" method="post">
+                            <input type="hidden" name="paymentId" th:value="${reservasi.payment.id}">
+                            <div style="margin-bottom: 15px;">
+                                <label style="font-size:13px; font-weight:600; display:block; margin-bottom:5px;">Catatan (Wajib diisi jika ditolak)</label>
+                                <textarea name="adminNote" rows="2" style="width:100%; max-width:400px; padding:8px; border-radius:6px; border:1px solid #ccc;"></textarea>
+                            </div>
+                            <button type="submit" name="isApproved" value="true" class="btn" style="background:#166534; color:#fff; border-radius:8px;">âœ… Terima Pembayaran</button>
+                            <button type="submit" name="isApproved" value="false" class="btn btn-danger" style="border-radius:8px; margin-left:10px;">âŒ Tolak Pembayaran</button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="card-footer">
+                <a href="/admin/reservasi" class="btn btn-secondary">â† Kembali ke Daftar</a>
+                
+                <div>
+                    <a th:if="${reservasi.status == 'CONFIRMED'}" th:href="@{/admin/reservasi/checkin/{id}(id=${reservasi.idReservasi})}" class="btn" style="background:#0d2c54; color:white;">
+                        Check-in Customer
+                    </a>
+                    <a th:if="${reservasi.status == 'CONFIRMED'}" th:href="@{/admin/reservasi/noshow/{id}(id=${reservasi.idReservasi})}" class="btn" style="background:#b26a4c; color:white; margin-left:10px;">
+                        Tandai No-show
+                    </a>
+                    <a th:if="${reservasi.status == 'CHECKED_IN'}" th:href="@{/admin/reservasi/complete/{id}(id=${reservasi.idReservasi})}" class="btn" style="background:#166534; color:white;">
+                        Selesaikan Reservasi
+                    </a>
+                    
+                    <a th:if="${reservasi.status != 'CANCELLED' and reservasi.status != 'COMPLETED'}" th:href="@{/admin/reservasi/delete/{id}(id=${reservasi.idReservasi})}"
+                       class="btn btn-danger" style="margin-left: 10px;" onclick="return confirm('Apakah Anda yakin ingin menghapus reservasi ini?')">
+                        Hapus Reservasi
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:replace="~{fragments/admin-navbar :: back-to-top}"></div>
+</body>
+
+</html>

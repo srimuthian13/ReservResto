@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Manajemen User | ReservResto Admin</title>
+    <link rel="stylesheet" th:href="@{/css/admin-recent-user.css}">
+</head>
+
+<body>
+    <header>
+        <h1>Data Pelanggan</h1>
+    </header>
+
+    <div th:replace="~{fragments/admin-navbar :: navbar}"></div>
+
+    <div class="wrapper">
+
+        <form th:action="@{/admin/users}" method="get" class="toolbar">
+            <input type="text" name="q" class="search-input" th:value="${q}"
+                placeholder="Cari nama atau email user..." />
+            <button type="submit" class="btn btn-search">Cari User</button>
+        </form>
+
+        <div class="card-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 80px;">ID</th>
+                        <th>Nama Lengkap</th>
+                        <th>Email</th>
+                        <th>No. WhatsApp</th>
+                        <th style="text-align: center;">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="u : ${users}">
+                        <td class="user-id" th:text="'#' + ${u.id}"></td>
+                        <td>
+                            <div class="user-name" th:text="${u.name}"></div>
+                        </td>
+                        <td th:text="${u.email}"></td>
+                        <td th:text="${u.phoneNumber != null ? u.phoneNumber : '-'}"></td>
+                        <td style="text-align: center;">
+                            <a th:href="@{/admin/reservasi(userId=${u.id})}" class="action-link">
+                                Data Reservasi
+                            </a>
+                        </td>
+                    </tr>
+
+                    <tr th:if="${users == null or #lists.isEmpty(users)}">
+                        <td colspan="5" style="text-align:center; color:#94a3b8; padding:40px;">
+                            Tidak ada data user yang ditemukan.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div th:replace="~{fragments/admin-navbar :: back-to-top}"></div>
+</body>
+
+</html>

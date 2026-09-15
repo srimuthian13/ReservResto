@@ -1,0 +1,39 @@
+<footer th:fragment="footer" class="premium-footer">
+    <div class="footer-container">
+        <div class="footer-col">
+            <h3 class="footer-brand">ReservResto</h3>
+            <p>Menghadirkan pengalaman bersantap yang tak terlupakan dengan layanan bintang lima dan hidangan mahakarya koki profesional.</p>
+        </div>
+        <div class="footer-col">
+            <h4>Tautan Navigasi</h4>
+            <ul>
+                <li><a th:href="${session.userId != null ? '/home' : '/'}">Beranda</a></li>
+                <li><a th:href="${session.userId != null ? '/menu' : '/login'}">Menu</a></li>
+                <li><a th:href="${session.userId != null ? '/reservasi' : '/login'}">Reservasi</a></li>
+                <li th:if="${session.userId != null}"><a th:href="@{/user/{id}/profile(id=${session.userId})}">Akun</a></li>
+                <li th:if="${session.userId == null}"><a th:href="@{/login}">Masuk</a></li>
+                <li th:if="${session.userId == null}"><a th:href="@{/register}">Daftar</a></li>
+                <li th:if="${session.userId != null}"><a th:href="@{/logout}">Logout</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Jam Operasional</h4>
+            <ul>
+                <li><i class="bi bi-clock"></i> Senin - Minggu: 09:00 - 22:00</li>
+                <li><i class="bi bi-geo-alt"></i> Jl. Asia Afrika No. 123, Bandung</li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Hubungi Kami</h4>
+            <div class="social-links">
+                <a href="#"><i class="bi bi-instagram"></i></a>
+                <a href="#"><i class="bi bi-facebook"></i></a>
+                <a href="#"><i class="bi bi-twitter-x"></i></a>
+            </div>
+            <p style="margin-top: 15px; font-size: 0.9rem;"><i class="bi bi-telephone"></i> +62 812 3456 7890</p>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2026 ReservResto. Hak Cipta Dilindungi.</p>
+    </div>
+</footer>
